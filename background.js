@@ -18,11 +18,9 @@ var taskFlag = 0;
 chrome.extension.onConnect.addListener(function (port) {
     // console.log("onConnect",port);
     var extensionListener = function (message, sender, sendResponse) {
-    	if(message.method && message.tabId && message.taskName){
-
-
+    	if(message.method && message.tabId){
     		if (message.method == 'sendToConsole'){
-                return;
+                // return;
     			//输出到background的调试窗口
     			console.log( unescape(message.args) );
     			//输出到当前已选择的tab的窗口

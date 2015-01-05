@@ -64,6 +64,7 @@ function createChannel() {
     // Listen to messages from the background page
     port.onMessage.addListener(function (message) {
       if(message.method && message.tabId){
+        // Console.warn(message.method);
         if( message.tabId != tabId)return;
 
         if(message.method == "taskStart"){//获取当前已选择的tab的id和url
@@ -218,7 +219,6 @@ function handleCheckDownloadStatus(success,fail){
 function handleGetFileData(i,status,data){
     filelist[i][1] = status;
     filelist[i][3] = data;
-
     if((i+1)==filelist.length)ZipFile.add(0);
 }
 
@@ -302,11 +302,13 @@ ZipFile.create = function(){
 
 
 ZipFile.add = function(i){
-    
+    Console.log("i:"+i)
     if(i<filelist.length){
         if(filelist[i][1]==1){
             var blobURL = filelist[i][0];
             var fileNameData = getFileName(blobURL);
+            
+
             var fileName = fileNameDuplicateRemove(fileNameData.fullname);
 
             // Console.log(blobURL);Console.log(filelist[i][3]);return;
@@ -325,13 +327,13 @@ ZipFile.add = function(i){
             else if(filelist[i][3].indexOf("data:text/javascript")==0 || filelist[i][3].indexOf("data:application/javascript")==0 || filelist[i][3].indexOf("data:application/x-javascript")==0 ){
                     fileName="js/"+fileName;
                     if(fileNameData.type!="js"){
-                        fileName+=".js";
+                        // fileName+=".js";
                     }
             }
             else if(filelist[i][3].indexOf("data:text/css")==0){
                     fileName="css/"+fileName;
                     if(fileNameData.type!="css"){
-                        fileName+=".css";
+                        // fileName+=".css";
                     }
             }
             else if(filelist[i][3].indexOf("data:application/json")==0){
@@ -343,7 +345,11 @@ ZipFile.add = function(i){
             else{
                     fileName="other/"+fileName;
             }
+            
 
+
+
+            // Console.log(i,fileName);
             global_zipWriter.add(fileName, new zip.Data64URIReader(filelist[i][3]), function() {
                 ZipFile.add(i+1);
             });
