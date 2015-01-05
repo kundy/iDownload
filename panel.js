@@ -136,18 +136,14 @@ function handleTaskStart(taskFlag)
         btnInit();
    }
    else{
-       $("#btnStart").addClass("btnDisabled");
-       $(".loading").show();
-       $(".downloadStatus").show().html("");
-
-       downloadStatus=enumStatus.start;
-       filelist = [];
-       checkTabStatus()
-       sendMessage({method: "getSelectedTab", content: tabId});
-       sendMessage({method: "tabStatusInit", content: ""})
-       sendMessage({method: "reloadTab", content: ""})
+        sendMessage({method: "getSelectedTab", content: tabId});
     }
 }
+
+
+
+
+
 
 function handleTaskFinish()
 {
@@ -174,7 +170,21 @@ function handleCheckTabStatus(msg){
 }
 
 function handleGetSelectedTab(url){
-    ZipFile.init(url);
+    if(url.indexOf("http")==0 || url.indexOf("file")==0 ){
+        $("#btnStart").addClass("btnDisabled");
+        $(".loading").show();
+        $(".downloadStatus").show().html("");
+
+       downloadStatus=enumStatus.start;
+       filelist = [];
+       checkTabStatus()
+       sendMessage({method: "tabStatusInit", content: ""})
+       sendMessage({method: "reloadTab", content: ""})
+        ZipFile.init(url);
+    }
+    else{
+        $(".downloadStatus").show().html("<span style=\"color:#f00\">error</span>：url error");
+    }
 }
 
 
