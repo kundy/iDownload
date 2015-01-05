@@ -1,0 +1,136 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Qdownload</title>
+    </head>
+<body>
+
+<style>
+body{font-size:18px;line-height:26px;padding:0px 0 0 30px;font-family:"Helvetica";background:#E8E8E8;margin:0;}
+h2{color:#7C6432;text-shadow:2px 2px 5px rgba(200,163,82,1);overflow: hidden;}
+.logo{margin-right:10px;margin-top:-2px;display:inline-block;vertical-align: middle;float:left;}
+.loading{display:inline-block;position: relative;top:8px;margin-left:20px;display:none;float:left;}
+h2 .text{float:left;vertical-align: middle;margin-top:10px;}
+h2 .btnStart{float:left;vertical-align: middle;margin:10px 0 0px 20px;}
+
+.container{width:400px;}
+.btn{display:inline-block;background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);vertical-align: middle;
+border: 1px solid rgba(0, 0, 0, 0.25);border-radius: 2px;box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.75);
+color: #444;font: inherit;margin: 0 1px 0 0;text-shadow: 0 1px 0 rgb(240, 240, 240);font-size:12px;text-decoration: none;padding:0 8px;}
+.btn:hover{background-image: -webkit-linear-gradient(#f0f0f0, #f0f0f0 38%, #e0e0e0);border-color: rgba(0, 0, 0, 0.5);
+box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), inset 0 1px 2px rgba(255, 255, 255, 0.95);color: black;}
+.btnDisabled,.btnDisabled:hover{cursor:default;color:#999;background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);box-shadow:none;border: 1px solid rgba(0, 0, 0, 0.25);}
+
+
+.config{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 0;color:#999;margin-bottom:10px;width:280px;display:none;}
+.config ul{padding:0px;}
+.config li{list-style:none;margin:0px;font-size:12px;line-height: 26px;overflow: hidden;}
+.config input.inputText{width:26px;text-align: center;margin-right: 6px;background:#fff;border: 1px solid rgba(0, 0, 0, 0.25);border-radius: 2px;;color:#333;}
+.config input.inputCheckbox{vertical-align: middle;margin-top:3px;}
+.config input.inputRadio{vertical-align: middle;margin-top:0px;}
+.config .name{display:block;text-align: right;margin-right:10px;width:86px;float:left;}
+.config .ct{display:block;float:left;}
+.config .ct label{display:block;}
+
+.downloadStatus{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
+position:absolute;top:92px;left:20px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:50px;display:none;}
+
+
+/* Loading Circle */
+.ball {display:inline-block;
+    background-color: rgba(0,0,0,0);
+    border:5px solid rgba(238,202,145,0.9);
+    opacity:.9;
+    border-top:5px solid rgba(0,0,0,0);
+    border-left:5px solid rgba(0,0,0,0);
+    border-radius:20px;
+    box-shadow: 0 0 16px #CA9B53;
+    width:20px;
+    height:20px;
+    margin:0 auto;
+    position:relative;
+    -moz-animation:spin .5s infinite linear;
+    -webkit-animation:spin .5s infinite linear;
+}
+
+.ball1 {display:inline-block;
+    background-color: rgba(0,0,0,0);
+    border:5px solid rgba(238,202,145,0.9);
+    opacity:.9;
+    border-top:5px solid rgba(0,0,0,0);
+    border-left:5px solid rgba(0,0,0,0);
+    border-radius:12px;
+    box-shadow: 0 0 13px #CA9B53; 
+    width:12px;
+    height:12px;
+    margin:0 auto;
+    position:absolute;
+    top:5px;
+    left:4px;
+    -moz-animation:spinoff .5s infinite linear;
+    -webkit-animation:spinoff .5s infinite linear;
+}
+
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform:rotate(0deg); }
+    100% { -webkit-transform:rotate(360deg); }
+}
+@-webkit-keyframes spinoff {
+    0% { -webkit-transform:rotate(0deg); }
+    100% { -webkit-transform:rotate(-360deg); }
+}
+</style>
+
+
+<h2>
+    <img src="icons/logo_48.png" class="logo" />
+    <span class="text">Qdownload</span>
+    <a href="#" id="btnStart" class="btn btnStart">START</a></span>
+    <div class="loading">
+        <div class="ball"></div>
+        <div class="ball1"></div>
+    </div>
+</h2>
+
+<div class="container">
+    <div class="config">
+        <ul>
+            <li>
+                <div class="name">Timeout：</div>
+                <div class="ct">
+                    <input class="inputText" type="text" value="10" name="config_timeout" />Second
+                </div>
+            </li>
+            <li>
+                <div class="name">File Path：</div>
+                <div class="ct">
+                    <label><input class="inputRadio" type="radio" checked="checked" value="1" name="config_path" />by file type</label>
+                    <label><input class="inputRadio" type="radio" value="2" name="config_path" />by url</label>
+                </div>
+            </li>
+            <li>
+                <div class="name">Log：</div>
+                <div class="ct">
+                    <label><input class="inputCheckbox" type="checkbox" checked="checked" value="1" name="config_report" />generate report.html</label>
+                </div>
+            </li>
+        </ul>
+    </div>
+   
+
+
+    <a href="#" id="btnDownload" style="display:none;"></a>
+    <div id="downloadStatus" class="downloadStatus"></div>
+
+
+    
+</div>
+</body>
+
+<script type="text/javascript" src="jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="zip.js"></script>
+<script type="text/javascript" src="panel.js"></script>
+
+</htmlD
