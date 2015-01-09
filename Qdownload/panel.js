@@ -219,7 +219,7 @@ function handleCheckDownloadStatus(success,fail){
 function handleGetFileData(i,status,data){
     filelist[i][1] = status;
     filelist[i][3] = data;
-    if((i+1)==filelist.length)ZipFile.add(0);
+    if((i+1)==filelist.length)ZipFile.getType();
 }
 
 
@@ -249,7 +249,7 @@ FileOBJ.add=function(fileUrl){
     // alert(downloadStatus);
     if(downloadStatus != enumStatus.start)return;
     if(fileUrl.indexOf("http")==0){
-        filelist.push([fileUrl,0,0]);//[文件url，是否已下载，文件重名标记，文件blob对象]
+        filelist.push([fileUrl,0,0,"","",""]);//[ 0文件url，1是否已下载，2文件重名标记，3文件base64数据对象，4文件名，5文件类型]
         updateStatus();
     }
 }
@@ -292,6 +292,20 @@ ZipFile.init = function(url){
 }
 
 
+//获取文件的真实类型
+ZipFile.getType = function(){
+    for(var i=0;i<filelist.length;i++){
+        var fileNameData =getFileName(filelist[i][0]);
+        var fileName = fileNameData.fullname;
+        var fileType = fileNameData.type;
+        var fileContentType = getContentType(filelist[i][3]);
+        Console.log(fileType);
+        //
+    }
+
+    // ZipFile.add(0);
+}
+
 ZipFile.create = function(){
     if(!global_zipWriter){
         zip.createWriter(new zip.BlobWriter(), function(zipWriter) {
@@ -311,9 +325,9 @@ ZipFile.add = function(i){
 
             var fileName = fileNameDuplicateRemove(fileNameData.fullname);
 
-            // Console.log(blobURL);Console.log(filelist[i][3]);return;
+            Console.log(blobURL);Console.log(fileName); // Console.log(filelist[i][3]);return;
 
-            // //判断blobType
+            //判断blobType
             if(filelist[i][3].indexOf("data:text/html;")==0 ){
                 if(fileNameData.type!="htm" && fileNameData.type!="html"){
                     fileName+=".html";
@@ -327,13 +341,13 @@ ZipFile.add = function(i){
             else if(filelist[i][3].indexOf("data:text/javascript")==0 || filelist[i][3].indexOf("data:application/javascript")==0 || filelist[i][3].indexOf("data:application/x-javascript")==0 ){
                     fileName="js/"+fileName;
                     if(fileNameData.type!="js"){
-                        // fileName+=".js";
+                        fileName+=".js";
                     }
             }
             else if(filelist[i][3].indexOf("data:text/css")==0){
                     fileName="css/"+fileName;
                     if(fileNameData.type!="css"){
-                        // fileName+=".css";
+                        fileName+=".css";
                     }
             }
             else if(filelist[i][3].indexOf("data:application/json")==0){
@@ -405,6 +419,51 @@ function fileNameDuplicateRemove(name){
     return retName;
 }
 
+
+var typeData = [
+
+    //图片类
+    {type:"jpg",prefix:["image/jpg","image/jpeg",]},
+    {type:"png",prefix:["image/png"]},
+    {type:"gif",prefix:["image/gif"]},
+    {type:"bmp",prefix:["image/bmp"]},
+    {type:"tiff",prefix:["image/tiff"]},
+    {type:"webp",prefix:["image/webp"]},
+
+    //js
+    {type:"js",prefix:["text/javascript","application/javascript","application/x-javascript"]},
+    {type:"json",prefix:["application/json"]},
+    
+    //css
+    {type:"css",prefix:["text/css"]},
+
+    //audio video
+
+    //font
+    {type:"woff",prefix:["application/x-font-woff"]},
+    {type:"ttf",prefix:["application/x-font-ttf"]},
+    {type:"svg",prefix:["image/svg+xml"]},
+
+    //页面
+    {type:"html",prefix:["text/htm","text/html"]},
+    {type:"xml",prefix:["text/xml"]},
+    {type:"txt",prefix:["text/plain"]}
+]
+
+
+//根据base64数据得到文件类型，
+function getContentType(baseData){
+    //判断blobType
+    for(var i=0;i<typeData.length;i++){
+        if(filelist[i][3].indexOf("data:text/html;")==0 ){
+            if(fileNameData.type!="htm" && fileNameData.type!="html"){
+                fileName+=".html";
+            }
+        }
+    }
+
+
+}
 
 //根据url获取文件名、类型
 function getFileName(url){
