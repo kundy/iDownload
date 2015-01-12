@@ -104,6 +104,7 @@ var enumStatus = {
 var global_zipWriter;
 var URL = window.webkitURL || window.mozURL || window.URL;
 var filelist=[];//下载文件列表
+var zipFilelist=[];//添加到zip的文件列表,防止重名引起zip挂掉
 var downloadStatus=enumStatus.ready;
 var tabId;//当前选中的tab标记
 var zipName = "";
@@ -178,6 +179,7 @@ function handleGetSelectedTab(url){
 
        downloadStatus=enumStatus.start;
        filelist = [];
+       zipFilelist = [];
        checkTabStatus()
        sendMessage({method: "tabStatusInit", content: ""})
        sendMessage({method: "reloadTab", content: ""})
@@ -296,14 +298,30 @@ ZipFile.init = function(url){
 ZipFile.getType = function(){
     for(var i=0;i<filelist.length;i++){
         var fileNameData =getFileName(filelist[i][0]);
-        var fileName = fileNameData.fullname;
-        var fileType = fileNameData.type;
+        filelist[i][4]=fileNameData.name;
         var fileContentType = getContentType(filelist[i][3]);
-        Console.log(fileType);
-        //
-    }
+        if(fileContentType!="")
+            filelist[i][5]=fileContentType;
+        else
+            filelist[i][5]=fileNameData.type;
 
-    // ZipFile.add(0);
+        //对某些类型的特殊处理
+        if(fileNameData.type=="woff"){
+            //http://os.oa.com/gulp-process-godzilla
+            //在此页面，字体文件会被当成xml处理。。why?
+            filelist[i][5]=fileNameData.type;
+        }
+
+        //对于根目录下的html页面，没有文件名时，文件名设置为上一级目录的名称
+        if(filelist[i][5] == "html" || filelist[i][5] == "htm"){
+            if(filelist[i][4]==""){
+                var fileNameTemp = filelist[i][0].substring(0,filelist[i][0].lastIndexOf('/'))
+                filelist[i][4] = fileNameTemp.substring(fileNameTemp.lastIndexOf('/')+1);
+            }
+        }
+
+    }
+    ZipFile.add(0);
 }
 
 ZipFile.create = function(){
@@ -316,57 +334,35 @@ ZipFile.create = function(){
 
 
 ZipFile.add = function(i){
-    Console.log("i:"+i)
     if(i<filelist.length){
         if(filelist[i][1]==1){
-            var blobURL = filelist[i][0];
-            var fileNameData = getFileName(blobURL);
-            
 
-            var fileName = fileNameDuplicateRemove(fileNameData.fullname);
+            var fileName = fileNameDuplicateRemove(filelist[i][4]+"."+filelist[i][5]);
 
-            Console.log(blobURL);Console.log(fileName); // Console.log(filelist[i][3]);return;
+            if(filelist[i][5] == "html" || filelist[i][5] == "htm" || filelist[i][5] == "xml")
+                fileName=fileName;
+            else if(filelist[i][5] == "css")
+                fileName="css/"+fileName;
+            else if(filelist[i][5] == "js" || filelist[i][5] == "json")
+                fileName="js/"+fileName; 
+            else if(filelist[i][5] == "png" || filelist[i][5] == "jpg" || filelist[i][5] == "jpeg" || filelist[i][5] == "bpm" || filelist[i][5] == "gif" || filelist[i][5] == "webp")
+                fileName="image/"+fileName;
+            else if(filelist[i][5] == "woff" || filelist[i][5] == "ttf")
+                fileName="font/"+fileName;
+            else if(filelist[i][5] == "swf")
+                fileName="swf/"+fileName;
+            else
+                fileName="other/"+fileName;
 
-            //判断blobType
-            if(filelist[i][3].indexOf("data:text/html;")==0 ){
-                if(fileNameData.type!="htm" && fileNameData.type!="html"){
-                    fileName+=".html";
-                }
-            }
-            else if(filelist[i][3].indexOf("data:image")==0){
-                    fileName="image/"+fileName;
-                    // Console.log(fileName);
-                    // Console.log(fileNameData.type);
-            }
-            else if(filelist[i][3].indexOf("data:text/javascript")==0 || filelist[i][3].indexOf("data:application/javascript")==0 || filelist[i][3].indexOf("data:application/x-javascript")==0 ){
-                    fileName="js/"+fileName;
-                    if(fileNameData.type!="js"){
-                        fileName+=".js";
-                    }
-            }
-            else if(filelist[i][3].indexOf("data:text/css")==0){
-                    fileName="css/"+fileName;
-                    if(fileNameData.type!="css"){
-                        fileName+=".css";
-                    }
-            }
-            else if(filelist[i][3].indexOf("data:application/json")==0){
-                    fileName="json/"+fileName;
-            }
-            else if(filelist[i][3].indexOf("data:text/plain")==0){
-                    fileName="text/"+fileName;
+            if(zipFilelist.indexOf(fileName)>=0){
+                ZipFile.add(i+1);
             }
             else{
-                    fileName="other/"+fileName;
+                zipFilelist.push(fileName);
+                global_zipWriter.add(fileName, new zip.Data64URIReader(filelist[i][3]), function() {
+                    ZipFile.add(i+1);
+                });
             }
-            
-
-
-
-            // Console.log(i,fileName);
-            global_zipWriter.add(fileName, new zip.Data64URIReader(filelist[i][3]), function() {
-                ZipFile.add(i+1);
-            });
         }
         else{
             ZipFile.add(i+1);
@@ -407,12 +403,11 @@ ZipFile.save = function(){
 function fileNameDuplicateRemove(name){
     var retName=name;
     for(var i=0;i<filelist.length;i++){
-        var fileNameData =getFileName(filelist[i][0]);
-        if(fileNameData.fullname==name){
+        if(filelist[i][4]+"."+filelist[i][5]==name){
             filelist[i][2]=filelist[i][2]+1;
             if(filelist[i][2]>1){
-                retName=fileNameData.name+"_"+filelist[i][2];
-                if(fileNameData.type!="")retName=retName+"."+fileNameData.type;//有些文件没有文件类型，也就没小数点
+                retName=filelist[i][4]+"_"+filelist[i][2];
+                if(filelist[i][5]!="")retName=retName+"."+filelist[i][5];//有些文件没有文件类型，也就没小数点
             }
         }
     }
@@ -455,20 +450,21 @@ var typeData = [
 function getContentType(baseData){
     //判断blobType
     for(var i=0;i<typeData.length;i++){
-        if(filelist[i][3].indexOf("data:text/html;")==0 ){
-            if(fileNameData.type!="htm" && fileNameData.type!="html"){
-                fileName+=".html";
+        for(var j=0;j<typeData[i].prefix.length;j++){
+             if(baseData.indexOf("data:"+typeData[i].prefix[j])==0 ){
+                return typeData[i].type;
             }
         }
     }
 
-
+    return "";
 }
 
 //根据url获取文件名、类型
 function getFileName(url){
-    var fullname = url.substring(url.lastIndexOf('/')+1);
-    if(fullname.indexOf('?')>0)fullname=fullname.substring(0,fullname.indexOf('?'));//去除?后面的参数
+    var fullname = url;
+    if(fullname.indexOf('?')>0)fullname=fullname.substring(0,fullname.indexOf('?'));//先去除?后面的参数
+    fullname = fullname.substring(fullname.lastIndexOf('/')+1);//只取最后/后面的名称
     var fileName=fullname;
     var fileType = "";
     if( fullname.lastIndexOf('.') >0){
@@ -476,16 +472,7 @@ function getFileName(url){
         fileType = fullname.substring(fullname.lastIndexOf('.')+1);
     }
 
-
     //对于可统译类型的文件，添加后缀html
-
-
-    //对于http://www.baidu.com/这种没有文件名、文件类型的处理
-    if(fullname==""){
-        fullname="index.html";
-        fileName="index";
-        fileType="html";
-    }
     return {fullname:fullname,name:fileName,type:fileType};
 }
 
