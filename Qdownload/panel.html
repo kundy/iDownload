@@ -23,18 +23,18 @@ box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), inset 0 1px 2px rgba(255, 255, 255, 0
 .btnDisabled,.btnDisabled:hover{cursor:default;color:#999;background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);box-shadow:none;border: 1px solid rgba(0, 0, 0, 0.25);}
 
 
-.config{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 0;color:#999;margin-bottom:10px;width:280px;display:none;}
+.config{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 0;color:#999;margin-bottom:10px;width:400px;display:;}
 .config ul{padding:0px;}
 .config li{list-style:none;margin:0px;font-size:12px;line-height: 26px;overflow: hidden;}
 .config input.inputText{width:26px;text-align: center;margin-right: 6px;background:#fff;border: 1px solid rgba(0, 0, 0, 0.25);border-radius: 2px;;color:#333;}
 .config input.inputCheckbox{vertical-align: middle;margin-top:3px;}
 .config input.inputRadio{vertical-align: middle;margin-top:0px;}
-.config .name{display:block;text-align: right;margin-right:10px;width:86px;float:left;}
+.config .name{display:block;text-align: right;margin-right:10px;width:150px;float:left;}
 .config .ct{display:block;float:left;}
 .config .ct label{display:block;}
 
 .downloadStatus{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
-position:absolute;top:92px;left:20px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:50px;display:none;}
+position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:50px;display:none;}
 
 
 /* Loading Circle */
@@ -98,9 +98,15 @@ position:absolute;top:92px;left:20px;font-size:12px;line-height: 26px;font-famil
     <div class="config">
         <ul>
             <li>
-                <div class="name">Timeout：</div>
+                <div class="name" >Loading Timeout：</div>
                 <div class="ct">
-                    <input class="inputText" type="text" value="10" name="config_timeout" />Second
+                    <input class="inputText" type="text" value="30" name="config_load_timeout" title="time used by the page loading" />Second
+                </div>
+            </li>
+            <li>
+                <div class="name">Download Timeout：</div>
+                <div class="ct">
+                    <input class="inputText" type="text" value="10" name="config_download_timeout"  title="time wait for the resource downloading" />Second
                 </div>
             </li>
             <li>

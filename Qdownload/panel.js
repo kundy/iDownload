@@ -100,14 +100,19 @@ var enumStatus = {
     doing: 2,
     finish: 3
 };
-
 var global_zipWriter;
 var URL = window.webkitURL || window.mozURL || window.URL;
+
+
 var filelist=[];//下载文件列表
-var downloadStatus=enumStatus.ready;
+var downloadStatus=enumStatus.ready;//下载状态标记
 var tabId;//当前选中的tab标记
-var zipName = "";
-var tabstatusTimeout;
+var zipName = "";//下载包名称
+var tabstatusTimeout;//tab状态轮询
+var downloadStatusTimeout;//下载状态轮询
+var tabReloadTimeout;//tab刷新超时
+var config={};//config选项
+
 
 
 
@@ -176,12 +181,19 @@ function handleGetSelectedTab(url){
         $(".loading").show();
         $(".downloadStatus").show().html("");
 
+        config = { loadingTimeout: $("[name='config_load_timeout']").val() , 
+                    downloadTimeout:$("[name='config_download_timeout']").val(),
+                    logFlag:$("[name='config_report']:checked").val() };
+
        downloadStatus=enumStatus.start;
        filelist = [];
        checkTabStatus()
        sendMessage({method: "tabStatusInit", content: ""})
        sendMessage({method: "reloadTab", content: ""})
         ZipFile.init(url);
+
+        clearTimeout(tabReloadTimeout);
+        tabReloadTimeout = setTimeout(tabReloadDidTimeout,config.loadingTimeout);
     }
     else{
         $(".downloadStatus").show().html("<span style=\"color:#f00\">error</span>：url error");
@@ -189,7 +201,15 @@ function handleGetSelectedTab(url){
 }
 
 
-var downloadStatusTimeout;
+
+function tabReloadDidTimeout(){
+    clearTimeout(tabReloadTimeout);
+    clearTimeout(downloadStatusTimeout);
+    Console.log("tabReloadDidTimeout");
+    FileOBJ.finish();
+}
+
+
 function checkDownloadStatus(){
     clearTimeout(downloadStatusTimeout);
     downloadStatusTimeout = setTimeout(function(){
