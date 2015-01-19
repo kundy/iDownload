@@ -36,6 +36,9 @@ box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), inset 0 1px 2px rgba(255, 255, 255, 0
 .downloadStatus{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
 position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:50px;display:none;}
 
+.config-help{background:rgba(255, 255, 255, 0.75);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
+position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:100px;display:none;}
+
 
 /* Loading Circle */
 .ball {display:inline-block;
@@ -99,26 +102,26 @@ position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-fami
         <ul>
             <li>
                 <div class="name" >Loading Timeout：</div>
-                <div class="ct">
-                    <input class="inputText" type="text" value="30" name="config_load_timeout" title="time used by the page loading" />Second
+                <div class="ct tips" id="tipsLoadTimeout">
+                    <input class="inputText" type="text" value="30" name="config_load_timeout"  />Second
                 </div>
             </li>
             <li>
                 <div class="name">Download Timeout：</div>
-                <div class="ct">
-                    <input class="inputText" type="text" value="10" name="config_download_timeout"  title="time wait for the resource downloading" />Second
+                <div class="ct tips" id="tipsDownloadTimeout">
+                    <input class="inputText" type="text" value="30" name="config_download_timeout" />Second
                 </div>
             </li>
             <li>
                 <div class="name">File Path：</div>
-                <div class="ct">
-                    <label><input class="inputRadio" type="radio" checked="checked" value="1" name="config_path" />by file type</label>
-                    <label><input class="inputRadio" type="radio" value="2" name="config_path" />by url</label>
+                <div class="ct tips">
+                    <label class="tips" id="tipsType"><input class="inputRadio" type="radio" checked="checked" value="1" name="config_path" />by file type</label>
+                    <label class="tips" id="tipsUrl"><input class="inputRadio" type="radio" value="2" name="config_path" />by url</label>
                 </div>
             </li>
             <li>
                 <div class="name">Log：</div>
-                <div class="ct">
+                <div class="ct tips" id="tipsLog">
                     <label><input class="inputCheckbox" type="checkbox" checked="checked" value="1" name="config_report" />generate report.html</label>
                 </div>
             </li>
@@ -129,6 +132,10 @@ position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-fami
 
     <a href="#" id="btnDownload" style="display:none;"></a>
     <div id="downloadStatus" class="downloadStatus"></div>
+    <div class="config-help">
+        <h3>TIPS:</h3>
+        <div class="ct">123</div>
+    </div>
 
 
     

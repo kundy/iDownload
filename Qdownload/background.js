@@ -56,7 +56,7 @@ chrome.extension.onConnect.addListener(function (port) {
         		reloadTab();
         	}
         	else if(message.method=="downloadFilelist"){
-        		Download.init(message.content);
+        		Download.init(message.content,message.timeout);
         	}
         	else if(message.method=="checkDownloadStatus"){
         		var fileDownloadFinish = 0;
@@ -182,23 +182,23 @@ function tabStatusInit(){
  // BEGIN: UTILITY FUNCTIONS
 var Download =function(){ }
 
-Download.init=function(list)
+Download.init=function(list,timeout)
 {
     filelist = [];
 	filelist = JSON.parse(list);
 	for(var i=0;i<filelist.length;i++){
-		Download.start(i);
+		Download.start(i,timeout);
 	}
 }
 
-Download.start=function(i)
+Download.start=function(i,timeout)
 {
     if(filelist.length==0)return;//filelist为空时直接退出
     var blobURL = filelist[i][0];
     var xhr = new XMLHttpRequest();    
     xhr.open("get", blobURL, true);
     xhr.responseType = "blob";
-    xhr.timeout = 10*1000;
+    xhr.timeout = timeout*1000;
     // xhr.setRequestHeader("User-Agent","Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)");
 
 
@@ -246,15 +246,6 @@ Download.fail=function(i){
 Download.finish=function(i){
 
     filelist[i][1]=1;
-    return;
-
-
-    var fileDownloadFinish = 0;
-    for(var i=0;i<filelist.length;i++){
-        if(filelist[i][1]>0)fileDownloadFinish++;
-    }
-    $("#downloadStatus2").html("文件下载完成，开始打包");
-    // if(fileDownloadFinish == filelist.length)ZipFile.add(0);
 }
 
 
