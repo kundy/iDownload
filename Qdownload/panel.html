@@ -9,10 +9,10 @@
 <style>
 body{font-size:18px;line-height:26px;padding:0px 0 0 30px;font-family:"Helvetica";background:#E8E8E8;margin:0;}
 h2{color:#7C6432;text-shadow:2px 2px 5px rgba(200,163,82,1);overflow: hidden;}
-.logo{margin-right:10px;margin-top:-2px;display:inline-block;vertical-align: middle;float:left;}
+.logo{margin-right:10px;margin-top:-2px;display:inline-block;vertical-align: middle;float:left;cursor:pointer;}
 .loading{display:inline-block;position: relative;top:8px;margin-left:20px;display:none;float:left;}
-h2 .text{float:left;vertical-align: middle;margin-top:10px;}
-h2 .btnStart{float:left;vertical-align: middle;margin:10px 0 0px 20px;}
+h2 .title{float:left;vertical-align: middle;margin-top:10px;cursor:pointer;}
+h2 .btn{float:left;vertical-align: middle;margin:10px 0 0px 20px;}
 
 .container{width:400px;}
 .btn{display:inline-block;background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);vertical-align: middle;
@@ -21,7 +21,9 @@ color: #444;font: inherit;margin: 0 1px 0 0;text-shadow: 0 1px 0 rgb(240, 240, 2
 .btn:hover{background-image: -webkit-linear-gradient(#f0f0f0, #f0f0f0 38%, #e0e0e0);border-color: rgba(0, 0, 0, 0.5);
 box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), inset 0 1px 2px rgba(255, 255, 255, 0.95);color: black;}
 .btnDisabled,.btnDisabled:hover{cursor:default;color:#999;background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);box-shadow:none;border: 1px solid rgba(0, 0, 0, 0.25);}
-
+h2 .btnStop{display:none;margin-left:4px;}
+.btnMode{background-image: -webkit-linear-gradient(#E8B950, #E8B950 38%, #E8B950);}
+.btnMode:hover{background-image: -webkit-linear-gradient(#D3AD52, #D3AD52 38%, #D3AD52);}
 
 .config{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 0;color:#999;margin-bottom:10px;width:400px;display:;}
 .config ul{padding:0px;}
@@ -36,7 +38,7 @@ box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), inset 0 1px 2px rgba(255, 255, 255, 0
 .downloadStatus{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
 position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:50px;display:none;}
 
-.config-help{background:rgba(255, 255, 255, 0.75);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
+.config-help{background:rgba(255, 255, 255, 0.95);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
 position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:100px;display:none;}
 
 
@@ -89,8 +91,10 @@ position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-fami
 
 <h2>
     <img src="icons/logo_48.png" class="logo" />
-    <span class="text">Qdownload</span>
+    <a class="text title">Qdownload v1.3</a>
+    <a href="#" id="btnMode" class="btn btnMode">MODE</a></span>
     <a href="#" id="btnStart" class="btn btnStart">START</a></span>
+    <a href="#" id="btnStop" class="btn btnStop btnDisabled">STOP</a></span>
     <div class="loading">
         <div class="ball"></div>
         <div class="ball1"></div>
@@ -119,12 +123,12 @@ position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-fami
                     <label class="tips" id="tipsUrl"><input class="inputRadio" type="radio" value="2" name="config_path" />by url</label>
                 </div>
             </li>
-            <li>
+            <!-- <li>
                 <div class="name">Log：</div>
                 <div class="ct tips" id="tipsLog">
                     <label><input class="inputCheckbox" type="checkbox" checked="checked" value="1" name="config_report" />generate report.html</label>
                 </div>
-            </li>
+            </li> -->
         </ul>
     </div>
    
@@ -142,7 +146,7 @@ position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-fami
 </div>
 </body>
 
-<script type="text/javascript" src="jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="zepto.min.js"></script>
 <script type="text/javascript" src="zip.js"></script>
 <script type="text/javascript" src="panel.js"></script>
 

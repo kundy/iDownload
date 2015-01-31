@@ -67,12 +67,13 @@ chrome.extension.onConnect.addListener(function (port) {
     	        }
     	        
                 //下载完了所有文件，打印看一下
-    	        if(fileDownloadFinish+fileDownloadFail == filelist.length && 0){
+    	        if(fileDownloadFinish+fileDownloadFail == filelist.length && 1){
                     console.log(filelist);
                     for(var i =0;i<filelist.length;i++){
                         if(filelist[i][1]==1){
                             console.log(filelist[i][0]);
-                            console.log(filelist[i][3].substring(0,30));
+                            console.log(filelist[i][2]);
+                            // console.log(filelist[i][3].substring(0,30));
                         }
                     }
                 }
@@ -86,7 +87,8 @@ chrome.extension.onConnect.addListener(function (port) {
         		port.postMessage({method:"getFileData",
                                     tabId:message.tabId,
     				    			i:message.content,
-    				    			status:filelist[message.content*1][1],
+                                    status:filelist[message.content*1][1],
+    				    			size:filelist[message.content*1][2],
     				    			data:fileData});
         	}
         }
@@ -141,7 +143,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 var selectedTabId = 0;
 var selectedTabUrl="";
 var filelist;
-var tabStatus = 0;
+var tabStatus = 0;//tab状态 0:初始 1:触发刷新 2:刷新完成
 
 
 //刷新当前页面
@@ -184,7 +186,7 @@ var Download =function(){ }
 
 Download.init=function(list,timeout)
 {
-    filelist = [];
+    filelist = [];//0:url 1:是否已下载 2:下载的文件大小 3:文件base64数据
 	filelist = JSON.parse(list);
 	for(var i=0;i<filelist.length;i++){
 		Download.start(i,timeout);
@@ -210,7 +212,8 @@ Download.start=function(i,timeout)
 	            var reader = new FileReader();
 				reader.onload = function(event){
 					filelist[i][3] = event.target.result;
-					filelist[i][1]=1;
+                    filelist[i][1]=1;
+					filelist[i][2]=blobFile.size;
 				}; 
 				var source = reader.readAsDataURL(blobFile);
             }

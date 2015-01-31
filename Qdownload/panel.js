@@ -40,6 +40,10 @@ Console.addMessage = function(type, format, args) {
 
 
 $(document).ready(function(){
+    $("h2 .logo,h2 .title").click(function(){
+        window.open("http://kundy.github.io/Qdownload/");
+    })
+
     tabId = chrome.devtools.inspectedWindow.tabId;
     FileOBJ.init();
     btnInit();
@@ -83,7 +87,7 @@ function createChannel() {
             handleCheckDownloadStatus(message.success,message.fail);
         }
         else if(message.method == "getFileData"){//获取文件下载后的base64数据
-            handleGetFileData(message.i*1,message.status*1,message.data);
+            handleGetFileData(message.i*1,message.status*1,message.data,message.size);
         }
       }
     });
@@ -104,7 +108,7 @@ var global_zipWriter;
 var URL = window.webkitURL || window.mozURL || window.URL;
 
 
-var filelist=[];//下载文件列表
+var filelist=[];//下载文件列表 //[ 0文件url，1是否已下载，2文件重名标记，3文件base64数据对象，4文件名，5文件类型，6文件大小]
 var downloadStatus=enumStatus.ready;//下载状态标记
 var zipFilelist=[];//添加到zip的文件列表,防止重名引起zip挂掉
 var downloadStatus=enumStatus.ready;
@@ -115,8 +119,8 @@ var downloadStatusTimeout;//下载状态轮询
 var tabReloadTimeout;//tab刷新超时
 var config={};//config选项
 var fileSaveType=1;//1:根据文件类型保存，2:根据文件路径保存
-
-
+var detectType = 0;//监控类型，0:自动 1:手动
+var downloadSize = 0;//下载的总文件大小
 
 
 //下载按钮初始化
@@ -148,12 +152,33 @@ function btnInit()
     })
 
 
-
-    $("#btnStart").text("START").unbind("click").click(function(){
-        $("#btnStart").unbind("click").text("downloading");
-        createChannel();
-        sendMessage({method: "taskStart", content: ""});
+    $("#btnStart").removeClass("btnDisabled").text("START").unbind("click").click(function(){
+        if(detectType==0){
+            $("#btnStart").unbind("click").text("Downloading");
+            createChannel();
+            sendMessage({method: "taskStart", content: ""});
+        }
+        else{
+            $("#btnStart").unbind("click").text("Downloading");
+            createChannel();
+            sendMessage({method: "taskStart", content: ""});
+        }
     })
+
+    $("#btnMode").removeClass("btnDisabled").unbind("click").click(function(){
+        if(detectType==1){
+            detectType=0;
+            $(".downloadStatus").show().html("<p>Mode changed! </p><p>refresh page and auto detecting files.</p>");
+            $("#btnStop").hide(); 
+        }
+        else{
+            detectType=1;
+            $(".downloadStatus").show().html("<p>Mode changed! </p><p>start and stop detecting by user.</p>");
+            $("#btnStop").show(); 
+        }
+    })
+
+    $("#btnStop").addClass("btnDisabled");
 }
 
 function handleTaskStart(taskFlag)
@@ -207,25 +232,35 @@ function handleCheckTabStatus(msg){
 function handleGetSelectedTab(url){
     if(url.indexOf("http")==0 || url.indexOf("file")==0 ){
         $("#btnStart").addClass("btnDisabled");
+        $("#btnMode").addClass("btnDisabled").unbind("click");
         $(".loading").show();
         $(".downloadStatus").show().html("");
 
+        //各种数据初始化
         config = { loadingTimeout: $("[name='config_load_timeout']").val() , 
                     downloadTimeout:$("[name='config_download_timeout']").val(),
                     logFlag:$("[name='config_report']:checked").val() };
-
         downloadStatus=enumStatus.start;
         filelist = [];
         zipFilelist = [];
-        checkTabStatus()
-        sendMessage({method: "tabStatusInit", content: ""})
-        sendMessage({method: "reloadTab", content: ""})
+        downloadSize =0;
         ZipFile.init(url);
         fileSaveType=$("input[name='config_path']:checked").val();
 
+        //手动
+        if(detectType==1){
+            $("#btnStop").removeClass("btnDisabled").unbind("click").bind("click",function(){
+                FileOBJ.ready();
+            });
 
-        clearTimeout(tabReloadTimeout);
-        tabReloadTimeout = setTimeout(tabReloadDidTimeout,config.loadingTimeout*1000);
+        }
+        else{//自动
+            checkTabStatus();
+            sendMessage({method: "tabStatusInit", content: ""});
+            sendMessage({method: "reloadTab", content: ""});
+            clearTimeout(tabReloadTimeout);
+            tabReloadTimeout = setTimeout(tabReloadDidTimeout,config.loadingTimeout*1000);
+        }
     }
     else{
         $(".downloadStatus").show().html("<span style=\"color:#f00\">error</span>：url error");
@@ -250,10 +285,10 @@ function checkDownloadStatus(){
 
 function handleCheckDownloadStatus(success,fail){
     var html="<p>";
-    html+="Detect <span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+filelist.length+"</span> files";
-    html+="   Done:<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+success+"</span>";
+    html+="Detect:<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+filelist.length+"</span>files";
+    html+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Done:<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+success+"</span>";
     if(fail>0)
-        html+="   Fail:<span style='display:inline-block;margin:0 5px;color:#ED5012;font-weight:bold;'>"+fail+"</span></p>";
+        html+="&nbsp;&nbsp;&nbsp;&nbsp;Fail:<span style='display:inline-block;margin:0 5px;color:#ED5012;font-weight:bold;'>"+fail+"</span></p>";
     html+="</p>";
 
 
@@ -267,9 +302,10 @@ function handleCheckDownloadStatus(success,fail){
     }
 }
 
-function handleGetFileData(i,status,data){
+function handleGetFileData(i,status,data,size){
     filelist[i][1] = status;
     filelist[i][3] = data;
+    filelist[i][6] = size;
     if((i+1)==filelist.length)ZipFile.getType();
 }
 
@@ -299,7 +335,7 @@ FileOBJ.init=function(){
 FileOBJ.add=function(fileUrl){
     if(downloadStatus != enumStatus.start)return;
     if(fileUrl.indexOf("http")==0){
-        filelist.push([fileUrl,0,0,"","",""]);//[ 0文件url，1是否已下载，2文件重名标记，3文件base64数据对象，4文件名，5文件类型]
+        filelist.push([fileUrl,0,0,"","","",0]);
         updateStatus();
     }
 }
@@ -322,6 +358,7 @@ FileOBJ.finish=function(){
 var ZipFile = {}
 ZipFile.init = function(url){
     zipName = url;
+    if(zipName.indexOf('?')>0)zipName=zipName.substring(0,zipName.indexOf('?'));//去除?后面的参数
     //如果最后是个/，去掉
     if(zipName.lastIndexOf("/") == zipName.length-1){
         zipName = zipName.substring(0,zipName.length-1);
@@ -336,7 +373,6 @@ ZipFile.init = function(url){
     zipName = zipName.replace(/\"/ig,"〞");
     zipName = zipName.replace(/\</ig,"〈");
     zipName = zipName.replace(/\>/ig,"〉");
-    if(zipName.indexOf('?')>0)zipName=zipName.substring(0,zipName.indexOf('?'));//去除?后面的参数
     zipName+=".zip";
 }
 
@@ -383,7 +419,7 @@ ZipFile.create = function(){
 ZipFile.add = function(i){
     if(i<filelist.length){
         if(filelist[i][1]==1){
-
+            downloadSize += filelist[i][6];
             var fileName = fileNameDuplicateRemove(filelist[i][0],filelist[i][4]+"."+filelist[i][5]);
             //根据文件类型保存
             if(fileSaveType==1){
@@ -403,9 +439,8 @@ ZipFile.add = function(i){
                     fileName="other/"+fileName;
             }
 
-
+            //规避重名文件：以上逻辑做了比较多的重名过滤，如果还存在极端条件下的重复文件，直接跳过
             if(zipFilelist.indexOf(fileName)>=0){
-                //规避重名文件：以上逻辑做了比较多的重名过滤，如果还存在极端条件下的重复文件，直接跳过
                 ZipFile.add(i+1);
             }
             else{
@@ -439,14 +474,24 @@ ZipFile.save = function(){
 
         global_zipWriter = null;
 
-        $("#btnStart").removeClass("btnDisabled");
         $(".loading").hide();
 
-        var html= "<p>Package in zip：<a style=\"color:#670000\" href=\""+blobURL+"\" target=\"_blank\" download=\""+zipName+"\">"+zipName+"</a></p>";
+        //显示下载文件大小
+        var size ="";
+        if(downloadSize<1024){
+            size = downloadSize+"byte";
+        }
+        else if(downloadSize<1024*1024){
+            size = Math.round(downloadSize*10/1024)/10+"KB";
+        }
+        else{
+            size = Math.round(downloadSize*100/1024/1024)/100+"MB";
+        }
+        var html= "<p>download files size：<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+size+"<span></p>";
+        html += "<p>Package in zip：<a style=\"color:#670000\" href=\""+blobURL+"\" target=\"_blank\" download=\""+zipName+"\">"+zipName+"</a></p>";
         $("#downloadStatus").append(html);
 
         sendMessage({method: "taskFinish", content: ""});
-        pageReset();
     });
 }
 
