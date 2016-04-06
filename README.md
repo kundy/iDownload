@@ -29,4 +29,7 @@ https://chrome.google.com/webstore/detail/qdownload/epfmddmhlielgpakkpphjogpfpmf
 
 *页面代码处理，对引用的资源文件进行本地化处理，让下载的页面 在本地可以直接打开
 
+#1.5
+修改了文件名为中文、空格等符号时保存出错的问题
+
 

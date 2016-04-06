@@ -46,6 +46,7 @@ $(document).ready(function(){
 
     tabId = chrome.devtools.inspectedWindow.tabId;
     FileOBJ.init();
+    txtInit();
     btnInit();
 });
 
@@ -123,9 +124,23 @@ var detectType = 0;//监控类型，0:自动 1:手动
 var downloadSize = 0;//下载的总文件大小
 
 
+
+//i18n
+function txtInit(){
+        $("#btnMode").text(chrome.i18n.getMessage( "mode" ));
+
+}
+
+
+
+
+
+
+
 //下载按钮初始化
 function btnInit()
 {
+
     $("#tipsLoadTimeout").mouseover(function(){
         $(".config-help").show();
         $(".config-help .ct").html("timeout for the page loading");
@@ -284,6 +299,18 @@ function checkDownloadStatus(){
 }
 
 function handleCheckDownloadStatus(success,fail){
+    // Console.log(filelist.length,success,fail);
+    if(filelist.length==0){
+
+        var html= "<p>sorry,detect 0 file</p>";
+        $("#downloadStatus").html(html);
+        $(".loading").hide();
+        sendMessage({method: "taskFinish", content: ""});
+
+        FileOBJ.finish();
+        return;
+    }
+
     var html="<p>";
     html+="Detect:<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+filelist.length+"</span>files";
     html+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Done:<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+success+"</span>";
@@ -381,7 +408,7 @@ ZipFile.init = function(url){
 ZipFile.getType = function(){
     for(var i=0;i<filelist.length;i++){
         var fileNameData =getFileName(filelist[i][0]);
-        filelist[i][4]=fileNameData.name;
+        filelist[i][4]=decodeURIComponent(fileNameData.name);
         var fileContentType = getContentType(filelist[i][3]);
         if(fileContentType!="")
             filelist[i][5]=fileContentType;
@@ -433,8 +460,8 @@ ZipFile.add = function(i){
                     fileName="image/"+fileName;
                 else if(filelist[i][5] == "woff" || filelist[i][5] == "ttf")
                     fileName="font/"+fileName;
-                else if(filelist[i][5] == "swf")
-                    fileName="swf/"+fileName;
+                else if(filelist[i][5] == "mp3" || filelist[i][5] == "mp4" || filelist[i][5] == "avi" || filelist[i][5] == "ogg" || filelist[i][5] == "webm" || filelist[i][5] == "ogv" || filelist[i][5] == "swf")
+                    fileName="media/"+fileName;
                 else
                     fileName="other/"+fileName;
             }

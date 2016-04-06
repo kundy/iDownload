@@ -1,12 +1,13 @@
 {
    "name": "Qdownload",
-   "version":"1.4",
+   "default_locale": "zh_CN",
+   "version":"1.5",
    "icons": {
       "19": "icons/logo_19.png",
       "48": "icons/logo_48.png",
       "128": "icons/logo_128.png"
    },
-   "description": "download web page's resource immediately as zip",
+   "description": "download web page's resource immediately as zip1",
    "manifest_version": 2,
    "devtools_page": "devtools.html",
    "background": { "scripts": ["background.js"] },

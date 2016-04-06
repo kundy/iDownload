@@ -188,6 +188,11 @@ Download.init=function(list,timeout)
 {
     filelist = [];//0:url 1:是否已下载 2:下载的文件大小 3:文件base64数据
 	filelist = JSON.parse(list);
+
+    if(filelist.length==0){
+        return;//filelist为空时直接退出
+    }
+
 	for(var i=0;i<filelist.length;i++){
 		Download.start(i,timeout);
 	}
@@ -195,7 +200,7 @@ Download.init=function(list,timeout)
 
 Download.start=function(i,timeout)
 {
-    if(filelist.length==0)return;//filelist为空时直接退出
+
     var blobURL = filelist[i][0];
     var xhr = new XMLHttpRequest();    
     xhr.open("get", blobURL, true);
