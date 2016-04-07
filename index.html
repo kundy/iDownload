@@ -1,76 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
+    <meta charset="UTF-8">
     <title>Qdownload by kundy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-
   <body>
+    <section class="page-header">
+      <h1 class="project-name">Qdownload</h1>
+      <h2 class="project-tagline">chrome Plug-in</h2>
+      <a href="https://github.com/kundy/iDownload" class="btn">View on GitHub</a>
+      <a href="https://github.com/kundy/iDownload/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/kundy/iDownload/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <header>
-      <div class="container">
-        <h1>Qdownload</h1>
-        <h2>chrome Plug-in</h2>
-
-        <section id="downloads">
-          <a href="https://github.com/kundy/Qdownload/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/kundy/Qdownload/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/kundy/Qdownload" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
-
-    <div class="container">
-      <section id="main_content">
-        <h3>
-<a id="介绍" class="anchor" href="#%E4%BB%8B%E7%BB%8D" aria-hidden="true"><span class="octicon octicon-link"></span></a>介绍</h3>
+    <section class="main-content">
+      <h3>
+<a id="介绍" class="anchor" href="#%E4%BB%8B%E7%BB%8D" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>介绍</h3>
 
 <p>前端工程师经常要扒页面，分析呀学习呀，但一个一个文件保存总是很麻烦。
 一般会选择用抓包工具或小偷采集程序，但如果能集成到浏览器中岂不是更方便。
 chrome插件也有现成的，比如Download Master、DownFaster,但这类插件一般是通过DOM来分析页面中引用的资源，再选择性的下载。这能够满足大多数场景，但有些数据是拿不到的，最常见的是javascript触发的网络请求。</p>
 
-<p>Qdownload采用监听浏览器的network消息，监测每一个请求来防止遗漏文件，然后再打包下载，确保数据是最全的。</p>
+<p>iDownload采用监听浏览器的network消息，监测每一个请求来防止遗漏文件，然后再打包下载，确保数据是最全的。</p>
 
 <h3>
-<a id="使用方法" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>使用方法</h3>
+<a id="15版本特性" class="anchor" href="#15%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1.5版本特性</h3>
+
+<ul>
+<li><p>多语言支持，支持中文和英文</p></li>
+<li><p>添加了日志 iDownload.txt</p></li>
+<li><p>修改了文件名为中文、空格等符号时保存出错的问题</p></li>
+<li><p>文件保存路径更加合理</p></li>
+<li><p>修复 在没有检测到文件的情况下任务中断的错误</p></li>
+</ul>
+
+<h3>
+<a id="使用方法" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>使用方法</h3>
 
 <ol>
-<li><p>先安装，在chrome应用商店下载Qdownload插件并安装。
+<li><p>先安装，在chrome应用商店下载iDownload插件并安装。
 <a href="https://chrome.google.com/webstore/detail/qdownload/epfmddmhlielgpakkpphjogpfpmfdhmn?hl=zh-CN&amp;gl=CN">https://chrome.google.com/webstore/detail/qdownload/epfmddmhlielgpakkpphjogpfpmfdhmn?hl=zh-CN&amp;gl=CN</a></p></li>
 <li><p>然后在地址栏中打开你要下载的页面并打开</p></li>
 <li><p>打开浏览器的开发者工具，右键-&gt;审核元素，F12，Ctrl+Shift+J 都可以触发打开</p></li>
-<li><p>在 弹出的开发面板中找到QDownload，点击 Start 按钮开始下载</p></li>
+<li><p>在 弹出的开发面板中找到iDownload，点击 Start 按钮开始下载</p></li>
 <li><p>下载完成后会自动生成zip包</p></li>
 </ol>
 
 <h1>
-<a id="效果图" class="anchor" href="#%E6%95%88%E6%9E%9C%E5%9B%BE" aria-hidden="true"><span class="octicon octicon-link"></span></a>效果图</h1>
+<a id="效果图" class="anchor" href="#%E6%95%88%E6%9E%9C%E5%9B%BE" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>效果图</h1>
 
-<p><img src="https://raw.githubusercontent.com/kundy/Qdownload/master/sample.png" alt="alt 截图" title="title 截图"></p>
+<p><img src="https://raw.githubusercontent.com/kundy/iDownload/master/sample.png" alt="alt 截图" title="title 截图"></p>
 
 <h1>
-<a id="开源" class="anchor" href="#%E5%BC%80%E6%BA%90" aria-hidden="true"><span class="octicon octicon-link"></span></a>开源</h1>
+<a id="开源" class="anchor" href="#%E5%BC%80%E6%BA%90" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>开源</h1>
 
 <p>本项目完全开源，如有任何疑问或者建议，欢迎反馈。</p>
 
-<h1>
-<a id="计划" class="anchor" href="#%E8%AE%A1%E5%88%92" aria-hidden="true"><span class="octicon octicon-link"></span></a>计划</h1>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/kundy/iDownload">Qdownload</a> is maintained by <a href="https://github.com/kundy">kundy</a>.</span>
 
-<p>*设置选项：超时时间、文件保存路径、生成日志 等</p>
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
 
-<p>*设置监听模式，目前是刷新页面，监听当前页面下所有请求，以后可以手动控制监听的 开始与结束 点</p>
+    </section>
 
-<p>*页面代码处理，对引用的资源文件进行本地化处理，让下载的页面 在本地可以直接打开</p>
-      </section>
-    </div>
-
-              <script type="text/javascript">
+            <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
