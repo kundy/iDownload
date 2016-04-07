@@ -1,0 +1,45 @@
+{
+    "description": {"message": "监控页面引用的资源，自动下载并打包。"},
+
+
+    "mode": {"message": "模式切换"},
+    "start": {"message": "开始"},
+    "stop": {"message": "结束"},
+    "detect": {"message": "检测到"},
+    "done": {"message": "下载完成"},
+    "fail": {"message": "下载失败"},
+    "files": {"message": "文件"},
+    "downloading": {"message": "下载中"},
+    "configLoadingTimeout": {"message": "页面加载超时:"},
+    "configDownloadTImeout": {"message": "资源下载超时:"},
+    "configTitle": {"message": "配置"},
+    "second": {"message": "秒"},
+    "configFilePath": {"message": "文件保存路径:"},
+    "byFileType": {"message": "根据文件类型"},
+    "byUrl": {"message": "根据文件原始目录"},
+    "tips": {"message": "提示"},
+    "modeChanged": {"message": "模式已切换到："},
+    "modeCurrent": {"message": "当前模式："},
+    "mod1": {"message": "自动模式"},
+    "mod2": {"message": "手动模式"},
+    "tip1": {"message": "请点击 <span style='color:#000000;font-weight:bold;'>开始</span> 按钮，插件会触发刷新当前页，检测页面引用的资源，自动下载所有文件<br/>该模式适用于没有进行 <span style='color:#000000;'>lazyload</span> 资源的页面。"},
+    "tip2": {"message": "请点击 <span style='color:#000000;font-weight:bold;'>开始</span> 按钮，手动刷新页面，一段时间后再按停止按钮，插件会将这段时间内该页面所有资源请求打包下载<br/>该模式适用于有进行 <span style='color:#000000;'>lazyload</span> 资源的页面，或不同页面跳转的场景。"},
+    "downloadSize": {"message": "下载的文件大小"},
+    "packageZip": {"message": "文件包"},
+    "tipOtherTask": {"message": "有其它任务正在进行中，请稍等！"},
+    "tipsDetectFail": {"message": "没有检测到有新的资源请求，下载打包失败！"},
+    "faillist": {"message": "失败的文件列表："},
+
+    "pageLoadingTimeout": {"message": "页面加载超时时间，默认 30 秒"},
+    "resourceDownloadTimeout": {"message": "资源下载超时时间，默认 15 秒"},
+
+
+
+
+
+
+
+
+
+    "end": {"message": ""}
+}

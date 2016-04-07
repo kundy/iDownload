@@ -1,0 +1,45 @@
+{
+    "description": {"message": "download web page's resource immediately as zip"},
+
+    "mode": {"message": "MODE"},
+    "start": {"message": "START"},
+    "stop": {"message": "STOP"},
+    "detect": {"message": "detect"},
+    "done": {"message": "done"},
+    "fail": {"message": "fail"},
+    "files": {"message": "files"},
+    "downloading": {"message": "Downloading"},
+    "configLoadingTimeout": {"message": "Loading Timeout : "},
+    "configDownloadTImeout": {"message": "Download Timeout : "},
+    "configTitle": {"message": "CONFIG"},
+    "second": {"message": "second"},
+    "configFilePath": {"message": "save file path : "},
+    "byFileType": {"message": "by file type"},
+    "byUrl": {"message": "by file origin path"},
+    "tips": {"message": "TIP"},
+    "modeChanged": {"message": "mod changed : "},
+    "modeCurrent": {"message": "current mod : "},
+    "mod1": {"message": "AUTO"},
+    "mod2": {"message": "Manual"},
+    "tip1": {"message": "Click <span style='color:#000000;font-weight:bold;'>START</span> button，the page will be refreshed by the plugin,and the resources will be detect and download.<br/>this mode is often applied to download the pages who do not use <span style='color:#000000;'>lazyload</span> technology"},
+    "tip2": {"message": "Click <span style='color:#000000;font-weight:bold;'>START</span> button,refresh the page and wait sometime,then click <span style='color:#000000;font-weight:bold;'>STOP</span> button,the plugin will detect and download all resources in this time,and package as a zip<br/>this mod is often applied to download the pages which use<span style='color:#000000;'>lazyload</span> technology,or Multiple pages"},
+    "downloadSize": {"message": "files total size:"},
+    "packageZip": {"message": "ZIP:"},
+    "tipOtherTask": {"message": "other task is ongoing ,please wait!"},
+    "tipsDetectFail": {"message": "failed to find any resource,download fail!"},
+    "faillist": {"message": "failed files list："},
+
+    "pageLoadingTimeout": {"message": "timeout for the page loading,default 30 seconds"},
+    "resourceDownloadTimeout": {"message": "timeout for the resource download,default 15 seconds"},
+
+
+
+
+
+
+
+
+
+
+    "end": {"message": ""}
+}

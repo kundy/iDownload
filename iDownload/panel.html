@@ -2,44 +2,45 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Qdownload</title>
+    <title>iDownload</title>
     </head>
 <body>
 
 <style>
 body{font-size:18px;line-height:26px;padding:0px 0 0 30px;font-family:"Helvetica";background:#E8E8E8;margin:0;}
-h2{color:#7C6432;text-shadow:2px 2px 5px rgba(200,163,82,1);overflow: hidden;}
+h2{color:#F1C40F;text-shadow:1px 1px 5px rgba(0,30,95,1);overflow: hidden;}
 .logo{margin-right:10px;margin-top:-2px;display:inline-block;vertical-align: middle;float:left;cursor:pointer;}
 .loading{display:inline-block;position: relative;top:8px;margin-left:20px;display:none;float:left;}
-h2 .title{float:left;vertical-align: middle;margin-top:10px;cursor:pointer;}
+h2 .title{float:left;vertical-align: middle;margin-top:10px;margin-right:15px;cursor:pointer;}
 h2 .btn{float:left;vertical-align: middle;margin:10px 0 0px 20px;}
 
 .container{width:400px;}
-.btn{display:inline-block;background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);vertical-align: middle;
-border: 1px solid rgba(0, 0, 0, 0.25);border-radius: 2px;box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.75);
-color: #444;font: inherit;margin: 0 1px 0 0;text-shadow: 0 1px 0 rgb(240, 240, 240);font-size:12px;text-decoration: none;padding:0 8px;}
-.btn:hover{background-image: -webkit-linear-gradient(#f0f0f0, #f0f0f0 38%, #e0e0e0);border-color: rgba(0, 0, 0, 0.5);
-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), inset 0 1px 2px rgba(255, 255, 255, 0.95);color: black;}
+.btn{display:inline-block;background-color: #ededed;vertical-align: middle;text-shadow:none;
+border: 1px solid rgba(0, 0, 0, 0.25);
+color: #444;font: inherit;margin: 0 1px 0 0;font-size:12px;text-decoration: none;padding:0 8px;min-width:45px;text-align: center;}
+.btn:hover{background-color:#f0f0f0;border-color: rgba(0, 0, 0, 0.3);
+color: black;}
 .btnDisabled,.btnDisabled:hover{cursor:default;color:#999;background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);box-shadow:none;border: 1px solid rgba(0, 0, 0, 0.25);}
 h2 .btnStop{display:none;margin-left:4px;}
-.btnMode{background-image: -webkit-linear-gradient(#E8B950, #E8B950 38%, #E8B950);}
+.btnMode{background-image:none;background-color:#D7B715;color:#001B61;}
 .btnMode:hover{background-image: -webkit-linear-gradient(#D3AD52, #D3AD52 38%, #D3AD52);}
 
-.config{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 0;color:#999;margin-bottom:10px;width:400px;display:;}
-.config ul{padding:0px;}
+.config{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 0;color:#999;margin-bottom:10px;width:270px;display:;}
+.config h3{font-size:14px;margin:10px 0 0 10px;}
+.config ul{padding:0px;margin:0;}
 .config li{list-style:none;margin:0px;font-size:12px;line-height: 26px;overflow: hidden;}
 .config input.inputText{width:26px;text-align: center;margin-right: 6px;background:#fff;border: 1px solid rgba(0, 0, 0, 0.25);border-radius: 2px;;color:#333;}
 .config input.inputCheckbox{vertical-align: middle;margin-top:3px;}
 .config input.inputRadio{vertical-align: middle;margin-top:0px;}
-.config .name{display:block;text-align: right;margin-right:10px;width:150px;float:left;}
+.config .name{display:block;text-align: right;margin-right:10px;width:120px;float:left;}
 .config .ct{display:block;float:left;}
 .config .ct label{display:block;}
 
-.downloadStatus{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
-position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:50px;display:none;}
+.downloadStatus{background:rgba(255, 255, 255, 0.55);padding:1px 10px 1px 10px;color:#999;margin-bottom:10px;width:500px;
+position:absolute;top:92px;left:330px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:50px;display:none;}
 
-.config-help{background:rgba(255, 255, 255, 0.95);padding:1px 0 1px 10px;color:#999;margin-bottom:10px;width:500px;
-position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:100px;display:none;}
+.config-help{background:rgba(255, 255, 255, 0.95);padding:10px 10px 10px 10px;color:#999;margin-bottom:10px;width:500px;
+position:absolute;top:92px;left:330px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:120px;display:none;}
 
 
 /* Loading Circle */
@@ -91,8 +92,8 @@ position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-fami
 
 <h2>
     <img src="icons/logo_48.png" class="logo" />
-    <a class="text title">Qdownload v1.5</a>
-    <a href="#" id="btnMode" class="btn btnMode">__MSG_mode__</a></span>
+    <a class="text title">iDownload v1.5</a>
+    <a href="#" id="btnMode" class="btn btnMode">MODE</a></span>
     <a href="#" id="btnStart" class="btn btnStart">START</a></span>
     <a href="#" id="btnStop" class="btn btnStop btnDisabled">STOP</a></span>
     <div class="loading">
@@ -103,32 +104,27 @@ position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-fami
 
 <div class="container">
     <div class="config">
+        <h3 class="config-title">配置</h3>
         <ul>
             <li>
-                <div class="name" >Loading Timeout：</div>
+                <div class="name config_loading_timeout" >Loading Timeout：</div>
                 <div class="ct tips" id="tipsLoadTimeout">
-                    <input class="inputText" type="text" value="30" name="config_load_timeout"  />Second
+                    <input class="inputText" type="text" value="30" name="config_load_timeout"  /><span class="config_second">Second</span>
                 </div>
             </li>
             <li>
-                <div class="name">Download Timeout：</div>
+                <div class="name config_download_timeout">Download Timeout：</div>
                 <div class="ct tips" id="tipsDownloadTimeout">
-                    <input class="inputText" type="text" value="10" name="config_download_timeout" />Second
+                    <input class="inputText" type="text" value="15" name="config_download_timeout" /><span class="config_second">Second</span>
                 </div>
             </li>
             <li>
-                <div class="name">File Path：</div>
+                <div class="name config_file_path">File Path：</div>
                 <div class="ct tips">
-                    <label class="tips" id="tipsType"><input class="inputRadio" type="radio" checked="checked" value="1" name="config_path" />by file type</label>
-                    <label class="tips" id="tipsUrl"><input class="inputRadio" type="radio" value="2" name="config_path" />by url</label>
+                    <label class="tips" id="tipsType"><input class="inputRadio" type="radio" checked="checked" value="1" name="config_path" /><span id="tipsTypeTxt">by file type</span></label>
+                    <label class="tips" id="tipsUrl"><input class="inputRadio" type="radio" value="2" name="config_path" /><span id="tipsUrlTxt">by url</span></label>
                 </div>
             </li>
-            <!-- <li>
-                <div class="name">Log：</div>
-                <div class="ct tips" id="tipsLog">
-                    <label><input class="inputCheckbox" type="checkbox" checked="checked" value="1" name="config_report" />generate report.html</label>
-                </div>
-            </li> -->
         </ul>
     </div>
    
@@ -137,8 +133,7 @@ position:absolute;top:92px;left:450px;font-size:12px;line-height: 26px;font-fami
     <a href="#" id="btnDownload" style="display:none;"></a>
     <div id="downloadStatus" class="downloadStatus"></div>
     <div class="config-help">
-        <h3>TIPS:</h3>
-        <div class="ct">123</div>
+        <div class="ct"></div>
     </div>
 
 

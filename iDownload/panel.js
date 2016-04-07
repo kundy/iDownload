@@ -41,7 +41,7 @@ Console.addMessage = function(type, format, args) {
 
 $(document).ready(function(){
     $("h2 .logo,h2 .title").click(function(){
-        window.open("http://kundy.github.io/Qdownload/");
+        window.open("http://kundy.github.io/iDownload/");
     })
 
     tabId = chrome.devtools.inspectedWindow.tabId;
@@ -127,7 +127,22 @@ var downloadSize = 0;//下载的总文件大小
 
 //i18n
 function txtInit(){
+
+    
+
+
         $("#btnMode").text(chrome.i18n.getMessage( "mode" ));
+        $("#btnStart").text(chrome.i18n.getMessage( "start" ));
+        $("#btnStop").text(chrome.i18n.getMessage( "stop" ));
+        $(".config-title").text(chrome.i18n.getMessage( "configTitle" ));
+        $(".config_loading_timeout").text(chrome.i18n.getMessage( "configLoadingTimeout" ));
+        $(".config_download_timeout").text(chrome.i18n.getMessage( "configDownloadTImeout" ));
+        $(".config_second").text(chrome.i18n.getMessage( "second" ));
+        $(".config_file_path").text(chrome.i18n.getMessage( "configFilePath" ));
+        $("#tipsTypeTxt").text(chrome.i18n.getMessage( "byFileType" ));
+        $("#tipsUrlTxt").text(chrome.i18n.getMessage( "byUrl" ));
+        $("#tips").text(chrome.i18n.getMessage( "tips" ));
+         $(".downloadStatus").show().html("<p>"+chrome.i18n.getMessage( "modeCurrent" )+"<span style='color:#EB3941'>"+chrome.i18n.getMessage( "mod1" )+"</span></p><p>"+chrome.i18n.getMessage( "tip1" )+"</p>");
 
 }
 
@@ -143,11 +158,11 @@ function btnInit()
 
     $("#tipsLoadTimeout").mouseover(function(){
         $(".config-help").show();
-        $(".config-help .ct").html("timeout for the page loading");
+        $(".config-help .ct").html( chrome.i18n.getMessage( "pageLoadingTimeout" ) );
     })
     $("#tipsDownloadTimeout").mouseover(function(){
         $(".config-help").show();
-        $(".config-help .ct").html("timeout for any resource downloading");
+        $(".config-help .ct").html( chrome.i18n.getMessage( "resourceDownloadTimeout" ) );
     })
     $("#tipsType").mouseover(function(){
         $(".config-help").show();
@@ -167,14 +182,14 @@ function btnInit()
     })
 
 
-    $("#btnStart").removeClass("btnDisabled").text("START").unbind("click").click(function(){
+    $("#btnStart").removeClass("btnDisabled").text(chrome.i18n.getMessage( "start" )).unbind("click").click(function(){
         if(detectType==0){
-            $("#btnStart").unbind("click").text("Downloading");
+            $("#btnStart").unbind("click").text(chrome.i18n.getMessage( "downloading" ));
             createChannel();
             sendMessage({method: "taskStart", content: ""});
         }
         else{
-            $("#btnStart").unbind("click").text("Downloading");
+            $("#btnStart").unbind("click").text(chrome.i18n.getMessage( "downloading" ));
             createChannel();
             sendMessage({method: "taskStart", content: ""});
         }
@@ -183,12 +198,12 @@ function btnInit()
     $("#btnMode").removeClass("btnDisabled").unbind("click").click(function(){
         if(detectType==1){
             detectType=0;
-            $(".downloadStatus").show().html("<p>Mode changed! </p><p>refresh page and auto detecting files.</p>");
+            $(".downloadStatus").show().html("<p>"+chrome.i18n.getMessage( "modeChanged" )+"<span style='color:#EB3941'>"+chrome.i18n.getMessage( "mod1" )+"</span></p><p>"+chrome.i18n.getMessage( "tip1" )+"</p>");
             $("#btnStop").hide(); 
         }
         else{
             detectType=1;
-            $(".downloadStatus").show().html("<p>Mode changed! </p><p>start and stop detecting by user.</p>");
+            $(".downloadStatus").show().html("<p>"+chrome.i18n.getMessage( "modeChanged" )+"<span style='color:#EB3941'>"+chrome.i18n.getMessage( "mod2" )+"</span></p><p>"+chrome.i18n.getMessage( "tip2" )+"</p>");
             $("#btnStop").show(); 
         }
     })
@@ -206,7 +221,7 @@ function handleTaskStart(taskFlag)
    //有其它任务 正在进行
    if(taskFlag){
         port.disconnect();
-        $(".downloadStatus").show().html("<span style=\"color:#f00\">error</span>：wait other task finish");
+        $(".downloadStatus").show().html("<span style=\"color:#f00\">error</span>："+chrome.i18n.getMessage( "tipOtherTask" ));
         btnInit();
    }
    else{
@@ -222,6 +237,7 @@ function handleTaskStart(taskFlag)
 function handleTaskFinish()
 {
     btnInit();
+    ZipFile.history="";
     port.disconnect();
 }
 
@@ -302,7 +318,7 @@ function handleCheckDownloadStatus(success,fail){
     // Console.log(filelist.length,success,fail);
     if(filelist.length==0){
 
-        var html= "<p>sorry,detect 0 file</p>";
+        var html= "<p>"+chrome.i18n.getMessage( "tipsDetectFail" )+"</p>";
         $("#downloadStatus").html(html);
         $(".loading").hide();
         sendMessage({method: "taskFinish", content: ""});
@@ -312,10 +328,10 @@ function handleCheckDownloadStatus(success,fail){
     }
 
     var html="<p>";
-    html+="Detect:<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+filelist.length+"</span>files";
-    html+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Done:<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+success+"</span>";
+    html+=chrome.i18n.getMessage( "detect" )+":<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+filelist.length+"</span>"+chrome.i18n.getMessage( "files" );
+    html+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+chrome.i18n.getMessage( "done" )+":<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+success+"</span>";
     if(fail>0)
-        html+="&nbsp;&nbsp;&nbsp;&nbsp;Fail:<span style='display:inline-block;margin:0 5px;color:#ED5012;font-weight:bold;'>"+fail+"</span></p>";
+        html+="&nbsp;&nbsp;&nbsp;&nbsp;"+chrome.i18n.getMessage( "fail" )+":<span style='display:inline-block;margin:0 5px;color:#ED5012;font-weight:bold;'>"+fail+"</span></p>";
     html+="</p>";
 
 
@@ -341,7 +357,7 @@ function handleGetFileData(i,status,data,size){
 
 function updateStatus(){
     if(downloadStatus==enumStatus.start){
-        var html="Detect <span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+filelist.length+"</span> files";
+        var html=chrome.i18n.getMessage( "detect" )+" <span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+filelist.length+"</span> "+chrome.i18n.getMessage( "files" );
         $("#downloadStatus").html(html);
     }
 }
@@ -383,13 +399,20 @@ FileOBJ.finish=function(){
 
 
 var ZipFile = {}
+ZipFile.history ="";
 ZipFile.init = function(url){
+    ZipFile.history += "url:"+url+"\r\n\r\n";
+
     zipName = url;
     if(zipName.indexOf('?')>0)zipName=zipName.substring(0,zipName.indexOf('?'));//去除?后面的参数
+    if(zipName.indexOf("#") !== -1){zipName = zipName.substring(0,zipName.indexOf("#"));}//去掉#后面的东西
+
     //如果最后是个/，去掉
     if(zipName.lastIndexOf("/") == zipName.length-1){
         zipName = zipName.substring(0,zipName.length-1);
     }
+    
+
     //文件禁用的符号 转换一下
     zipName = zipName.replace(/http:\/\//ig,"");
     zipName = zipName.replace(/https:\/\//ig,"");
@@ -456,7 +479,7 @@ ZipFile.add = function(i){
                     fileName="css/"+fileName;
                 else if(filelist[i][5] == "js" || filelist[i][5] == "json")
                     fileName="js/"+fileName; 
-                else if(filelist[i][5] == "png" || filelist[i][5] == "jpg" || filelist[i][5] == "jpeg" || filelist[i][5] == "bpm" || filelist[i][5] == "gif" || filelist[i][5] == "webp")
+                else if(filelist[i][5] == "png" || filelist[i][5] == "jpg" || filelist[i][5] == "jpeg" || filelist[i][5] == "bpm" || filelist[i][5] == "gif" || filelist[i][5] == "webp" || filelist[i][5] == "ico")
                     fileName="image/"+fileName;
                 else if(filelist[i][5] == "woff" || filelist[i][5] == "ttf")
                     fileName="font/"+fileName;
@@ -482,13 +505,45 @@ ZipFile.add = function(i){
         }
     }
     else{
-        ZipFile.save();
+        ZipFile.saveHistory();
     }
 }
 
 
+ZipFile.saveHistory = function(){
+    var successNum = 0;
+    var failNum=0;
+    for(var i=0;i<filelist.length;i++){
+        if(filelist[i][1]==1)
+            successNum++;
+        else
+            failNum++;
+    }
+
+    ZipFile.history += chrome.i18n.getMessage( "detect" )+ (successNum+failNum) + chrome.i18n.getMessage( "files" )+"\t";
+    ZipFile.history += chrome.i18n.getMessage( "done" ) +successNum+"\t";
+    ZipFile.history += chrome.i18n.getMessage( "fail" ) +failNum+"\r\n";
+    if(failNum>0){
+        ZipFile.history += "\r\n\r\n"+chrome.i18n.getMessage( "faillist" )+"\r\n";
+        for(var i=0;i<filelist.length;i++){
+            if(filelist[i][1]==2){
+                ZipFile.history += filelist[i][0]+"\r\n";
+            }
+
+        }
+    }
+
+    //保存日志
+    global_zipWriter.add("iDownload-log.txt", new zip.TextReader(ZipFile.history), function() {
+        ZipFile.save();
+    });
+
+}
+
+//保存zip并下载
 ZipFile.save = function(){
     // alert("save")
+    
     var downloadButton = document.getElementById("btnDownload");
     global_zipWriter.close(function(blob) {
         var blobURL = URL.createObjectURL(blob);
@@ -514,8 +569,8 @@ ZipFile.save = function(){
         else{
             size = Math.round(downloadSize*100/1024/1024)/100+"MB";
         }
-        var html= "<p>download files size：<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+size+"<span></p>";
-        html += "<p>Package in zip：<a style=\"color:#670000\" href=\""+blobURL+"\" target=\"_blank\" download=\""+zipName+"\">"+zipName+"</a></p>";
+        var html= "<p>"+chrome.i18n.getMessage( "downloadSize" )+"：<span style='display:inline-block;margin:0 5px;color:#39B231;font-weight:bold;'>"+size+"<span></p>";
+        html += "<p>"+chrome.i18n.getMessage( "packageZip" )+"：<a style=\"color:#670000\" href=\""+blobURL+"\" target=\"_blank\" download=\""+zipName+"\">"+zipName+"</a></p>";
         $("#downloadStatus").append(html);
 
         sendMessage({method: "taskFinish", content: ""});
