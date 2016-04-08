@@ -16,7 +16,7 @@ window.onbeforeunload=function(){
 
 function panelInit()
 {
-  chrome.devtools.panels.create( "Qdownload",  "icons/logo_48.png",  "panel.html",
+  chrome.devtools.panels.create( "iDownload",  "icons/logo_48.png",  "panel.html",
       function() {
    
       }

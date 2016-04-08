@@ -19,7 +19,7 @@ iDownload采用监听浏览器的network消息，监测每一个请求来防止�
 
 ### 使用方法
 1. 先安装，在chrome应用商店下载iDownload插件并安装。
-https://chrome.google.com/webstore/detail/qdownload/epfmddmhlielgpakkpphjogpfpmfdhmn?hl=zh-CN&gl=CN
+https://chrome.google.com/webstore/detail/idownload/epfmddmhlielgpakkpphjogpfpmfdhmn?hl=zh-CN&gl=CN
 
 2. 然后在地址栏中打开你要下载的页面并打开
 
